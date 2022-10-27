@@ -8,6 +8,7 @@
       
       :key="config.name"
       :id = "config.id"
+      :title = "config.name"
       :style="{
         width: config.rectangleWidth + 'px',
         height: config.rectangleHeight + 'px',
@@ -37,6 +38,7 @@
 
 <script>
 
+
 export default {
   props: {
     rectColor: {
@@ -57,10 +59,7 @@ export default {
       let borderImgArr = [];
       borderImgArr = document.getElementsByClassName('menu-for-show__border');
 
-      console.log( borderImgArr.length);
-      console.log('1321241');
       for(let i = 0; i < borderImgArr.length; i++){
-        console.log(borderImgArr[i].style.border);
         borderImgArr[i].style.border = '0px solid';  
       }
       document.getElementById(pack.id).style.border = '3px solid green';
@@ -181,7 +180,7 @@ export default {
 <style lang="scss" scoped>
 .menu-for-show {
   position: relative;
-  width:auto;
+  width: 190px;
   &__border {
   }
 }
