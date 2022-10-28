@@ -2,8 +2,8 @@
   
   <div class="p-330-6">
     <div>
-            <VueSidebarMenuAkahon @selectPackParent="selectPackHandler"/>
-      </div>
+      <VueSidebarMenuAkahon @selectPackParent="selectPackHandler"/>
+    </div>
 
     <h1>П-302-0</h1>
     <packManager :packs="allPacks.blocks" @selectPackParent="selectPackHandler" />
@@ -38,6 +38,7 @@
           
           <div id="mainBlock" class="hardware-view-page__canvas-wrp" :key="reRenderKey" :style="'zoom:' + this.zoom + '%;'">
             <hardwareCanvas
+              :zoom = "zoom"
               v-for="pack in allPacks.blocks"
               :key="pack.name"
               :id = "'block' + pack.id"
@@ -45,6 +46,7 @@
               :hardwareComponents="pack.components"
               :bgImage="pack.background"
               :backgroundSettings="pack.backgroundSettings"
+
             />
           </div>
         </div>

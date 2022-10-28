@@ -3,11 +3,12 @@
     @dragging="onDrag"
     :w="hardwareComponent.width"
     :h="hardwareComponent.height"
-    :x="hardwareComponent.left"
+    :x="hardwareComponent.left" 
     :y="hardwareComponent.top"
     :draggable="hardwareComponent.draggable"
     :resizable="false"
     :parent="true"
+    :scale = "(hardZoomScale)"
   >
     <img
       class="component-img"
@@ -17,7 +18,8 @@
         height: hardwareComponent.height + 'px',
         transform: `rotate(${degreeOfRotation}deg)`,
       }"
-      @click.prevent="selectMethodByClick"
+      @mouseup.prevent="selectMethodByClick"
+      @touchend.prevent="selectMethodByClick"
     />
   </vue-draggable-resizable>
 </template>
@@ -27,24 +29,29 @@
 import { demoRequest } from "@/api/demoRequest.js";
 
 export default {
-  props: {
-    hardwareComponent: {
-      type: Object,
-    },
-  },
+  props:['hardZoom','hardwareComponent'],
+  // props: {
+  //   hardwareComponent: {
+  //     type: Object,
+  //   },
+  //   hardZoom: {
+  //     type: Number,
+  //   }
+  // },
   data() {
     return {
       imgIndex: 0,
       degreeOfRotation:  this.hardwareComponent.initValue,
+      hardZoomScale: this.hardZoom / 100.0
     };
   },
-  methods: {
-    onDrag(x, y) {
-      if (this.hardwareComponent) {
-        this.hardwareComponent.left = x;
-        this.hardwareComponent.top = y;
+  watch: {
+      hardZoom(val){
+        this.hardZoomScale = val / 100.0
       }
-    },
+  },
+  methods: {
+    
     changePhotoByClick() {
       //console.log(this.imgIndex)
       if (this.imgIndex === this.hardwareComponent.valuesAndPhotos.length - 1) {
@@ -90,6 +97,13 @@ export default {
         this.rotate();
         return this.sendTestRequest();
       }
+    },
+    onDrag(x, y) {
+      if (this.hardwareComponent) {
+        this.hardwareComponent.left = x;
+        this.hardwareComponent.top = y;
+      }
+      console.log(this.hardZoomScale);
     },
   },
 };
