@@ -8,6 +8,7 @@
         height: `${backgroundSettings.height}px`,
         backgroundSize: `${backgroundSettings.width}px ${backgroundSettings.height}px`,
       }"
+      style="border-radius: 15px;"
     >
       <canvasComponent
         v-for="(hardwareComponent, i) in allComponents"
@@ -188,9 +189,10 @@ export default {
 .canvas {
   display: flex;
   justify-content: center;
-
+border-radius: 15px;
+box-shadow: 21px 18px 10px 0px rgba(34, 60, 80, 0.2);
+border:none;
   &__body {
-    border: 1px solid;
     position: relative;
     background-repeat: no-repeat;
   }

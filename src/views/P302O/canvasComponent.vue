@@ -10,7 +10,6 @@
     :parent="true"
     :scale = "(hardZoomScale)"
   >
-  <!-- <h1>{{dataServ['id']}}</h1> -->
     <img
       class="component-img"
       
@@ -29,12 +28,10 @@
 <script>
  
 // TODO: remove this!
-import { demoRequest } from "@/api/demoRequest.js";
 import $url from '@/api/config.js';
 import Vue from "vue";
 import VueSession from "vue-session";
 Vue.use(VueSession);
-
 
 
 export default {
@@ -106,15 +103,11 @@ export default {
       this.hardwareComponent.currentValue = this.hardwareComponent.valuesAndPhotos[this.imgIndex].value;
       this.degreeOfRotation = this.hardwareComponent.valuesAndPhotos[this.imgIndex].value;
     },
-    // TODO: remove this
-    async sendTestRequest() {
-      const {data} = await demoRequest(this.hardwareComponent);
-      console.log(data);
-    },
-    sendTestRequest2() {
+    sendTestRequest() {
       let socket = new WebSocket($url);
 
-      // var session_id = 0;
+      // PROMISES: https://stackoverflow.com/questions/42304996/javascript-using-promises-on-websocket
+
       var sendData = new Map([
         ['session_id', this.$session.get('session_id')],
         ['id',this.hardwareComponent.id],
@@ -124,7 +117,7 @@ export default {
         ['left',this.hardwareComponent.left/this.hardZoomScale],
         ['top', this.hardwareComponent.top/this.hardZoomScale]
       ]);
- 
+
       socket.onopen = function() {
         socket.send(JSON.stringify(Array.from(sendData.entries())));
       };
@@ -132,7 +125,12 @@ export default {
       const v = this;
       //https://stackoverflow.com/questions/67376026/vue-js-updating-html-inside-websocket-onmessage-event
       socket.onmessage = function(event) {
-        v.dataServ = new Map(JSON.parse(event.data));
+        try {
+          v.dataServ = new Map(JSON.parse(event.data));  
+          // console.log(v.dataServ);
+        } catch (event) {
+          console.log(event);
+        }
       };
 
       socket.onclose = function(event) {
@@ -153,18 +151,18 @@ export default {
         this.hardwareComponent.rotatable === false
       ) {
         this.changePhotoByClick();
-        return this.sendTestRequest2();
+        return this.sendTestRequest();
       } else if (
         this.hardwareComponent.draggable === true &&
         this.hardwareComponent.rotatable === false
       ) {
-        return this.sendTestRequest2();
+        return this.sendTestRequest();
       } else if (
         this.hardwareComponent.draggable === false &&
         this.hardwareComponent.rotatable === true
       ) {
         this.rotate();
-        return this.sendTestRequest2();
+        return this.sendTestRequest();
       }
     },
     onDrag(x, y) {
